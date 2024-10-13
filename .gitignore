@@ -1,0 +1,7 @@
+logs/*
+legacy/*
+test/*
+__pycache__
+test
+key.env
+*.pickle
