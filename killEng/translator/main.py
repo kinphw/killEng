@@ -11,7 +11,8 @@ class Translator(BaseIO):
         self._initSet("번역할 텍스트파일을 선택하세요", "_translated", "xlsx")
 
     def run(self, bDebug:bool=False):
-        liStrBefore = LoaderFromText(self.strInput).readText()
+        # liStrBefore = LoaderFromText(self.strInput).readText()
+        liStrBefore = self._read()
         self._getLength(liStrBefore)
 
         if not bDebug:
@@ -23,6 +24,15 @@ class Translator(BaseIO):
         self._save(liStrBefore, liStrAfter)
 
     ##########################################################################################
+
+    def _read(self) -> list[str]:
+        print("1. Line별로 번역(기본값)")
+        print("2. 전체를 번역 (양이 적은 경우, 개별 추적이 불필요한 경우 등)")
+        match (input(">>") or '1'):
+            case "1": 
+                return LoaderFromText(self.strInput).readText()
+            case "2":
+                return [LoaderFromText(self.strInput).readTextRaw()]
 
     def _getLength(self, liStrBefore:list[str]) -> None:
         total_length = sum(len(s) for s in liStrBefore)
