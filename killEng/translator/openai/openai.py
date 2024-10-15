@@ -22,6 +22,8 @@ class OpenaiTranslator(BaseTranslator):
             # .env 파일에서 OpenAI API 키 불러오기
             load_dotenv("key.env")
             self.api_key = os.getenv("OPENAI_API_KEY")            
+            if self.api_key is None:
+                raise EnvironmentError(f"Environment variable 'key' not found")
 
             self.initialized = True
 

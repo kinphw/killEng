@@ -24,6 +24,8 @@ class DeepLTranslator(BaseTranslator):
         load_dotenv("key.env")        
         # self.auth_key = KeyReader().getKey()
         self.auth_key = os.getenv("DEEPL_API_KEY")
+        if self.auth_key is None:
+            raise EnvironmentError(f"Environment variable 'key' not found")
 
         # self.url = 'https://api-free.deepl.com/v2/translate'  # 무료 API 엔드포인트
         self.url = 'https://api.deepl.com/v2/translate'
