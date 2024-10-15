@@ -24,6 +24,8 @@ class TranslationHandlerDeepl(BaseTranslationHandler):
     source_lang:str #DEEPL
     target_lang:str #DEEPL
 
+    bDebug:bool
+
     def __init__(self, liStrBefore:list[str]) -> None:        
         self.liStrBefore = liStrBefore
         self.objTool = DeepLTranslator()
@@ -32,9 +34,10 @@ class TranslationHandlerDeepl(BaseTranslationHandler):
         super().__init__()
         self._setVariable() # 번역방향에 따라 소스, 타겟 언어 변수를 클래스 변수로 선언
 
-    def run(self) -> list[str]:        
+    def run(self, bDebug:bool = False) -> list[str]:        
 
         self._setBatch()
+        self.bDebug = bDebug
 
         match self.intBatch:
             case ToolInfo.SINGLE:
@@ -118,11 +121,17 @@ class TranslationHandlerDeepl(BaseTranslationHandler):
         
         liStrAfter:list[str] = []
 
-        max_size_kib = 128 # 128 KiB를 바이트로 변환 : Deepl
+        max_size_kib = 100 # 128 KiB를 바이트로 변환 : Deepl
         liChunked:list[list[str]] = ChunkedListMaker(self.liStrBefore, max_size_kib).get_chunks()
 
         for chunk in tqdm.tqdm(liChunked, desc = "Translating"):
-            liStrAfter.extend(self.objTool.translateBatch(chunk, source_lang=self.source_lang, target_lang=self.target_lang))
+            if self.bDebug:            
+                total_length = sum(len(item) for item in chunk)
+                print(f"Chunk length: {total_length}")
+            else:
+                liStrAfter.extend(self.objTool.translateBatch(chunk, source_lang=self.source_lang, target_lang=self.target_lang))            
+
+        if self.bDebug: exit(1)       
 
         return liStrAfter
     

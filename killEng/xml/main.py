@@ -7,54 +7,58 @@ class SECXmlParser(BaseIO):
         self._initSet("Parsing할 SEC XML파일 선택", "_parsed", "txt")
 
     def run(self):
-        # XML 문자열을 파일로부터 읽어옴
-        root = etree.parse(self.strInput)   
-
-        # 결과 리스트 반환
+        root = etree.parse(self.strInput)
         texts_list = self.extract_text_tags(root)
-
-        # texts_list를 각 요소를 개행문자로 구분한 후 텍스트 파일로 저장
         with open(self.strOutput, 'w', encoding='utf-8') as f:
             f.write('\n'.join(texts_list))
-
         print(f"파싱된 텍스트를 {self.strOutput}에 저장하였습니다.")
 
-    # 원하는 태그의 텍스트를 추출하여 리스트로 반환
     def extract_text_tags(self, root):
         extracted_texts = []
-        # <HD>, <P>, <FP> 태그를 모두 순회
         for elem in root.iter():
-            # <FTNT> 내부의 <P> 태그는 무시
+            # 조건1 : <FTNT> 내부의 <P> 태그는 아예 무시
             if elem.tag == 'P' and elem.getparent().tag == 'FTNT':
                 continue
-            # <FTNT> 외부의 <HD>, <P>, <FP> 태그의 텍스트만 추가
-            if elem.tag in {'HD', 'P', 'FP', 'SECTNO', 'SUBJECT', 'AMDPAR'}:
-                # <SU> 태그의 텍스트를 제외하고 수집
-                # text_content = ''.join(
-                #     text for text in elem.itertext() if elem.find('.//SU') is None or text not in [su.text for su in elem.findall('.//SU')]
-                # ).strip()
 
-                # 1. <SU> 태그의 존재 여부 확인
-                has_su_tag = elem.find('.//SU') is not None
+            # 조건 2 : 특정 태그만 ㅇ니식
+            # <HD>, <P>, <FP> : 기본 내용들
+            # <SECTNO>, <SUBJECT>, <AMDPAR> : 추가 내용들
+            # <TTITLE>, <CHED>, <ROW>, <ENT>, <LI> 표 관련 내용들
+            if elem.tag in {
+                'HD', 'P', 'FP'
+                , 'SECTNO', 'SUBJECT', 'AMDPAR'
+                , 'TTITLE', 'CHED', 'ROW', 'ENT'}: #'LI'}:
+                
+                # 기본적으로는 elem.text만 포함
+                text_content = elem.text if elem.text else ''
 
-                # 2. <SU> 태그 내의 텍스트들을 리스트로 생성
-                su_texts = [su.text for su in elem.findall('.//SU')] #. : 현재 요소 // : 하위 요소 재귀적탐색
+                ###########################################################################
+                ## ENT보다 상위로 올라가서 표 전체에 itertext() 적용 고려!!! #############################
+                # <P> 또는 <ENT> 태그의 경우에만 itertext()로 모든 하위 텍스트를 포함하되 <SU> 제외
+                if elem.tag in {'P', 'ENT'}:
+                    su_texts = [su.text for su in elem.findall('.//SU')]
+                    filtered_texts = [
+                        text for text in elem.itertext()
+                        if text and text not in su_texts
+                    ]
+                    # filtered_texts에서 SU를 제외한 텍스트를 결합
+                    text_content = ' '.join(filtered_texts).strip()
 
-                # 3. <SU> 태그가 없거나, <SU> 태그 텍스트가 아닌 경우에만 텍스트 포함
-                filtered_texts = [
-                    text for text in elem.itertext()
-                    if not has_su_tag or text not in su_texts
-                ]
-
-                # 4. 텍스트들을 결합하고, 양쪽 공백 제거
-                text_content = ''.join(filtered_texts).strip()
-
-                # 중복 공백을 제거
-                clean_text = ' '.join(text_content.split())
+                # 텍스트들을 결합하고, 양쪽 공백 제거                
+                clean_text = ' '.join(''.join(text_content).split())
 
                 if clean_text:
+                    # 태그별로 구분하여 라벨 추가
+                    if elem.tag == 'TTITLE':
+                        clean_text = f"<표> {clean_text}"
+                    elif elem.tag == 'CHED':
+                        clean_text = f"<표 헤더> {clean_text}"
+                    elif elem.tag == 'ENT' and elem.getparent().tag == 'ROW':
+                        clean_text = f"<표 내용> {clean_text}"
+                    
                     extracted_texts.append(clean_text)
-        return extracted_texts            
-    
+
+        return extracted_texts
+
 if __name__ == "__main__":
     SECXmlParser().run()
