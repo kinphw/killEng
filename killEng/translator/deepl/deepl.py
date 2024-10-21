@@ -54,7 +54,7 @@ class DeepLTranslator(BaseTranslator):
             return translation_text
                         
         else:
-            print(f"오류 발생: {response.status_code} - {response.text}")
+            print(f"오류 발생: {response.status_code} - {response.text}")            
             return ""
 
     def translateBatch(self, liText:list[str], source_lang='EN', target_lang='KO') -> list[str]:        
