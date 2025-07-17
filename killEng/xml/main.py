@@ -28,7 +28,8 @@ class SECXmlParser(BaseIO):
         #         self.set2.add(ele)
 
     def run(self):
-        root = etree.parse(self.strInput)
+        parser = etree.XMLParser()
+        root = etree.parse(self.strInput, parser)
         texts_list = self.extract_text_tags(root)
         with open(self.strOutput, 'w', encoding='utf-8') as f:
             f.write('\n'.join(texts_list))

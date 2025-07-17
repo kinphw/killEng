@@ -4,6 +4,7 @@ from killEng.translator.main import Translator
 from killEng.common.lengthCounter import LengthCounter
 from killEng.xml.main import SECXmlParser
 from killEng.xml.duplicate import SECXmlTagCounter
+from killEng.common.killSpace import EmptyLineRemover
 
 class KillEng:
 
@@ -13,14 +14,17 @@ class KillEng:
     def run(self):
         while True:
             print("Kill English")
+            print("------------------")                        
             print("11. PDF to TEXT")
             print("12. TEXT Prep")
-            print("------------------")            
-            print("21. Text Translate")
             print("------------------")            
             print("31. 텍스트파일 글자수 확인")
             print("32. XML 구조 확인")
             print("33. XML 파싱하여 텍스트로 저장(SEC)")
+            print("------------------")                            
+            print("21. Text Translate")
+            print("------------------")            
+            print("91. Remove Empty Lines from File")
             print("0. Exit")
             menu = input("Select menu: ")
 
@@ -36,6 +40,10 @@ class KillEng:
                 SECXmlTagCounter().run()
             elif menu == "33":
                 SECXmlParser().run()
+            elif menu == "91":
+                remover = EmptyLineRemover()
+                remover.select_files()
+                remover.remove_empty_lines()
             elif menu == "0":
                 print("Exit")
                 break

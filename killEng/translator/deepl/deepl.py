@@ -11,7 +11,7 @@ from killEng.translator.util.baseTrans import BaseTranslator
 class DeepLTranslator(BaseTranslator):
     
     _instance = None  # 싱글턴 인스턴스 저장
-    auth_key:str
+    auth_key:str | None  # None도 허용
     
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:

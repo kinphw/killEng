@@ -7,3 +7,6 @@ key.env
 *.pickle
 *.txt
 *.xlsx
+
+# Data Folder
+data/*
