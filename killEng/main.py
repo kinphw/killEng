@@ -6,6 +6,9 @@ from killEng.parser.sec.main import SECXmlParser
 from killEng.parsePrep.sec.duplicate import SECXmlTagCounter
 from killEng.common.killSpace import EmptyLineRemover
 from killEng.parsePrep.law.readXml import XMLAnalyzer
+from killEng.translatePrep.numbered import NumberedLineMerger
+
+from killEng.common.ansi import ANSIColor
 
 class KillEng:
 
@@ -14,30 +17,31 @@ class KillEng:
 
     def run(self):
         while True:
-            print("Kill English")
-            print("------------------")                        
-            print("I. 텍스트 추출 전 전처리") #parsePrep                    
-            print("------------------")                                       
-            print("  11. XML 구조 확인(SEC)")
-            print("  12. XML 구조 확인(LAW)")            
-            print("------------------")                                       
-            print("II. 파싱 to TEXT") #parser              
-            print("------------------")            
-            print("  21. PDF to TEXT")            
-            print("  22. XML 파싱하여 텍스트로 저장(SEC)")
-            print("  23. XML 파싱하여 텍스트로 저장(LAW)")            
-            print("------------------")                        
-            print("III. 번역 전 텍스트 전처리") #translatePrep
-            print("------------------")                                        
-            print("  31. Remove Empty Lines from File")            
-            print("  32. 텍스트파일 글자수 확인")       
-            print("  33. TEXT 자연어 전처리(개행구분)")                 
-            print("------------------")                            
-            print("IV. 메인 번역(txt)") #translator
-            print("------------------")                                                    
-            print("  41. Text Translate") #v
-            print("------------------")            
-            print("0. Exit")
+            print(ANSIColor.colorize("Kill English", "bold"))
+            print("------------------")
+            print(ANSIColor.colorize("I. 텍스트 추출 전 전처리", "yellow"))
+            print("------------------")
+            print(ANSIColor.colorize("  11. XML 구조 확인(SEC)", "green"))
+            print(ANSIColor.colorize("  12. XML 구조 확인(LAW)", "green"))
+            print("------------------")
+            print(ANSIColor.colorize("II. 파싱 to TEXT", "yellow")) #parser
+            print("------------------")
+            print(ANSIColor.colorize("  21. PDF to TEXT", "green"))
+            print(ANSIColor.colorize("  22. XML 파싱하여 텍스트로 저장(SEC)", "green"))
+            print(ANSIColor.colorize("  23. XML 파싱하여 텍스트로 저장(LAW)", "green"))
+            print("------------------")
+            print(ANSIColor.colorize("III. 번역 전 텍스트 전처리", "yellow")) #translatePrep
+            print("------------------")
+            print(ANSIColor.colorize("  31. Remove Empty Lines from File", "green"))
+            print(ANSIColor.colorize("  32. 텍스트파일 글자수 확인", "green"))
+            print(ANSIColor.colorize("  33. TEXT 자연어 전처리(개행구분)", "green"))
+            print(ANSIColor.colorize("  34. (FOR MiCAR) 번호가 붙은 문장 병합", "green")) #numbered.py
+            print("------------------")
+            print(ANSIColor.colorize("IV. 메인 번역(txt)", "yellow")) #translator
+            print("------------------")
+            print(ANSIColor.colorize("  41. Text Translate", "green")) #v
+            print("------------------")
+            print(ANSIColor.colorize("0. Exit", "red"))
             menu = input("Select menu: ")
 
             if menu == "11":
@@ -59,6 +63,9 @@ class KillEng:
                 LengthCounter().count_characters()                
             elif menu == "33": # 2. 추출한 TEXT 전처리 
                 TextPrep().run()                
+            elif menu == "34": # 3. 번호가 붙은 문장 병합
+                merger = NumberedLineMerger()
+                merger.run()                
 
             elif menu == "41": # 3. API 활용하여 TEXT를 영한번역 (문장단위 api 클래스에 던짐)
                 Translator().run()       

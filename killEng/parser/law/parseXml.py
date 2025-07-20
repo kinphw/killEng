@@ -1,3 +1,6 @@
+# v0.1.0
+# date : 2025-07-20
+
 from lxml import etree
 from killEng.common.myFileDialog import MyFileDialog as myfd
 import os
@@ -38,7 +41,7 @@ class XMLTextExtractor:
             elif child.tag in {"enum", "header", "text"}:
                 continue  # 이미 상단에서 처리함
             else:
-                self.extract(child, level)
+                self.extract(child, level)    
 
     def parse_and_write(self, xml_path):
         tree = etree.parse(xml_path)

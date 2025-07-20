@@ -61,10 +61,45 @@ class OpenaiTranslator(BaseTranslator):
             print(response.json())
             exit(1)
 
-    def translateBatch(self, liText):
-        print("OpenAI 번역기는 배치 번역을 지원하지 않습니다.")
-        exit(1)
+    def translateBatch(self, liText:list[str], how:str="영한", model:str="gpt-3.5-turbo") -> list[str]:
+        """
+        Translate a batch of texts using OpenAI API.
 
+        :param liText: List of texts to translate.
+        :param how: Translation direction ("영한" or "한영").
+        :param model: OpenAI model to use for translation.
+        :return: List of translated texts.
+        """
+        url = "https://api.openai.com/v1/chat/completions"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+
+        system_content = "Translate the following English text to Korean." if how == "영한" else "Translate the following Korean text to English."
+
+        # Prepare messages for batch translation
+        messages = [{"role": "system", "content": system_content}]
+        for text in liText:
+            messages.append({"role": "user", "content": text})
+
+        data = {
+            "model": model,
+            "messages": messages,
+            "temperature": 0.3
+        }
+
+        # Send request
+        response = requests.post(url, headers=headers, json=data)
+
+        # Process response
+        if response.status_code == 200:
+            choices = response.json()['choices']
+            return [choice['message']['content'] for choice in choices]
+        else:
+            print(f"Request failed with status code: {response.status_code}")
+            print(response.json())
+            exit(1)
 # 예제 사용
 if __name__ == "__main__":
     translator = OpenaiTranslator()
