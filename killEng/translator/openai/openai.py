@@ -27,7 +27,7 @@ class OpenaiTranslator(BaseTranslator):
 
             self.initialized = True
 
-    def translateEach(self, text:str, how:str="영한", model:str="gpt-3.5-turbo") -> str:
+    def translateEach(self, text:str, how:str="영한", model:str="gpt-4o") -> str:
         # OpenAI API 엔드포인트 및 헤더 설정
         url = "https://api.openai.com/v1/chat/completions"
         headers = {
@@ -76,12 +76,14 @@ class OpenaiTranslator(BaseTranslator):
             "Authorization": f"Bearer {self.api_key}"
         }
 
-        system_content = "Translate the following English text to Korean." if how == "영한" else "Translate the following Korean text to English."
+        system_content = "Translate these sentences to Korean:" if how == "영한" else "Translate these sentences to English:"
+        user_content = "\n".join([f"{i + 1}. {text}" for i, text in enumerate(liText)])
 
-        # Prepare messages for batch translation
-        messages = [{"role": "system", "content": system_content}]
-        for text in liText:
-            messages.append({"role": "user", "content": text})
+        # Prepare the messages
+        messages = [
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": user_content}
+        ]
 
         data = {
             "model": model,
@@ -89,13 +91,14 @@ class OpenaiTranslator(BaseTranslator):
             "temperature": 0.3
         }
 
-        # Send request
+        # Send the request
         response = requests.post(url, headers=headers, json=data)
 
-        # Process response
+        # Process the response
         if response.status_code == 200:
-            choices = response.json()['choices']
-            return [choice['message']['content'] for choice in choices]
+            translated_text = response.json()['choices'][0]['message']['content']
+            # Split the translated text into individual sentences
+            return [line.strip() for line in translated_text.split("\n") if line.strip()]
         else:
             print(f"Request failed with status code: {response.status_code}")
             print(response.json())
