@@ -9,6 +9,8 @@ class LengthCounter:
             self.filename = filename
         else:
             self.filename = myfd.askopenfilename("파일을 선택하세요.")
+            if not self.filename:  # 파일 선택 취소 시 처리
+                raise ValueError("파일이 선택되지 않았습니다.")
 
     def count_characters(self):
         with open(self.filename, 'rt', encoding='utf8') as file:

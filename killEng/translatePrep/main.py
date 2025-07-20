@@ -1,8 +1,8 @@
 from killEng.common.baseIO import BaseIO
 from killEng.common.loader import LoaderFromText
 from killEng.common import saver
-from killEng.textPrep.tokenizer import TextTokenizer
-from killEng.textPrep.deleteEmptyLines import DeleteEmptyLines
+from killEng.translatePrep.tokenizer import TextTokenizer
+from killEng.translatePrep.deleteEmptyLines import DeleteEmptyLines
 
 #from killEng.common.saver.saverTemp import SaverFromListText
 

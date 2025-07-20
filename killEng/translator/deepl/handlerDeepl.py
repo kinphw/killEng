@@ -8,7 +8,7 @@ import pandas as pd
 import tqdm
 
 # from killEng.translator.util.baseTrans import BaseTranslator
-from killEng.translator.deepl.deepl import DeepLTranslator
+from killEng.translator.deepl.deeplMine import DeepLTranslator
 from killEng.translator.util.chunkmaker import ChunkedListMaker
 from killEng.translator.util.toolinfo import ToolInfo
 from killEng.translator.util.baseHandler import BaseTranslationHandler

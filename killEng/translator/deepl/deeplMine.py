@@ -27,8 +27,8 @@ class DeepLTranslator(BaseTranslator):
         if self.auth_key is None:
             raise EnvironmentError(f"Environment variable 'key' not found")
 
-        # self.url = 'https://api-free.deepl.com/v2/translate'  # 무료 API 엔드포인트
-        self.url = 'https://api.deepl.com/v2/translate'
+        self.url = 'https://api-free.deepl.com/v2/translate'  # 무료 API 엔드포인트
+        # self.url = 'https://api.deepl.com/v2/translate'
 
     def translateEach(self, text:str, source_lang='EN', target_lang='KO') -> str:
 
