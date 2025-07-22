@@ -1,13 +1,17 @@
-from killEng.parser.pdfToText.main import PdfToText
-from killEng.translatePrep.main import TextPrep
-from killEng.translator.main import Translator
-from killEng.common.lengthCounter import LengthCounter
-from killEng.parser.sec.main import SECXmlParser
 from killEng.parsePrep.sec.duplicate import SECXmlTagCounter
-from killEng.common.killSpace import EmptyLineRemover
 from killEng.parsePrep.law.readXml import XMLAnalyzer
-from killEng.translatePrep.numbered import NumberedLineMerger
 
+from killEng.parser.pdfToText.main import PdfToText
+from killEng.parser.sec.main import SECXmlParser
+from killEng.parser.law.parseXml import XMLTextExtractor
+
+from killEng.translatePrep.numbered import NumberedLineMerger
+from killEng.translatePrep.main import TextPrep
+
+from killEng.translator.main import Translator
+
+from killEng.common.lengthCounter import LengthCounter
+from killEng.common.killSpace import EmptyLineRemover
 from killEng.common.ansi import ANSIColor
 
 class KillEng:
@@ -54,6 +58,8 @@ class KillEng:
                 PdfToText().run()
             elif menu == "22":
                 SECXmlParser().run()
+            elif menu == "23":
+                XMLTextExtractor().run()
 
             elif menu == "31":
                 remover = EmptyLineRemover()
