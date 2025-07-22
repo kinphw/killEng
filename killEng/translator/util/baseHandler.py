@@ -5,6 +5,7 @@ class BaseTranslationHandler:
     #번역방향 상수
     ENKO = 1
     KOEN = 2
+    JAKO = 3
 
     #번역방향 클래스변수
     intDirection:int # 번역 방향
@@ -20,9 +21,11 @@ class BaseTranslationHandler:
     def askDirection(self) -> None:
         print("1> 영한")
         print("2> 한영")
+        print("3> 일한")        
         match input(">>"):
             case "1": self.intDirection = self.ENKO
             case "2": self.intDirection = self.KOEN
+            case "3": self.intDirection = self.JAKO            
             case _: 
                 print("잘못된 입력입니다.")
                 exit(1)

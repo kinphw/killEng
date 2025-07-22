@@ -82,6 +82,9 @@ class TranslationHandlerDeepl(BaseTranslationHandler):
         elif self.intDirection == self.KOEN:
             self.source_lang = "ko"
             self.target_lang = "en"
+        elif self.intDirection == self.JAKO:
+            self.source_lang = "ja"
+            self.target_lang = "ko"
 
     #########################################################################
     # 한개씩 traslateEach에 던짐
@@ -121,7 +124,16 @@ class TranslationHandlerDeepl(BaseTranslationHandler):
         
         liStrAfter:list[str] = []
 
-        max_size_kib = 100 # 128 KiB를 바이트로 변환 : Deepl
+        # max_size_kib = 100 # 128 KiB를 바이트로 변환 : Deepl
+
+        # 번역 방향에 따라 max_size_kib 설정
+        if self.intDirection == self.ENKO:
+            print("max_size_kib를 100KiB로 설정합니다.")
+            max_size_kib = 100  # 영어 -> 한국어: 100 KiB
+        else:
+            print("max_size_kib를 30KiB로 설정합니다.")
+            max_size_kib = 30  # 한영, 일한: 30 KiB
+
         liChunked:list[list[str]] = ChunkedListMaker(self.liStrBefore, max_size_kib).get_chunks()
 
         for chunk in tqdm.tqdm(liChunked, desc = "Translating"):

@@ -45,6 +45,9 @@ class TranslationHandlerOpenai(BaseTranslationHandler):
             self.how = "영한"
         elif self.intDirection == self.KOEN:
             self.how = "한영"
+        else:
+            print("ERROR: Unsupported translation direction")
+            exit(1)
 
     def _setBatch(self) -> None:
         print("1> Single")

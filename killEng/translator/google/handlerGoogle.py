@@ -39,6 +39,9 @@ class TranslationHandlerGoogle(BaseTranslationHandler):
         elif self.intDirection == self.KOEN:
             self.source_lang = "ko"
             self.target_lang = "en"
+        else:
+            print("ERROR: Unsupported translation direction")
+            exit(1)
 
     #########################################################################
     # 한개씩 traslateEach에 던짐
