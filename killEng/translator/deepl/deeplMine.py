@@ -12,6 +12,7 @@ class DeepLTranslator(BaseTranslator):
     
     _instance = None  # 싱글턴 인스턴스 저장
     auth_key:str | None  # None도 허용
+    bFree:bool
     
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -27,8 +28,13 @@ class DeepLTranslator(BaseTranslator):
         if self.auth_key is None:
             raise EnvironmentError(f"Environment variable 'key' not found")
 
-        self.url = 'https://api-free.deepl.com/v2/translate'  # 무료 API 엔드포인트
-        # self.url = 'https://api.deepl.com/v2/translate'
+        # 무료 API 사용 여부 설정
+        self.bFree = os.getenv("DEEPL_FREE_BOOL", "True").lower() in ("true")
+        
+        if self.bFree:
+           self.url = 'https://api-free.deepl.com/v2/translate'  # 무료 API 엔드포인트
+        else:
+           self.url = 'https://api.deepl.com/v2/translate'
 
     def translateEach(self, text:str, source_lang='EN', target_lang='KO') -> str:
 

@@ -61,7 +61,7 @@ class OpenaiTranslator(BaseTranslator):
             print(response.json())
             exit(1)
 
-    def translateBatch(self, liText:list[str], how:str="영한", model:str="gpt-3.5-turbo") -> list[str]:
+    def translateBatch(self, liText:list[str], how:str="영한", model:str="gpt-4o") -> list[str]:
         """
         Translate a batch of texts using OpenAI API.
 
